@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 Cara Weggler
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.example.android.mycameraapp;
 
 import android.Manifest;
@@ -8,19 +23,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
-import android.net.Uri;
+.camera2.CameraCaptureSession;
+
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.SparseIntArray;
-import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 /**
@@ -35,6 +54,36 @@ public class CameraFragment extends Fragment implements View.OnClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     /*
+        Obtain a CameraManager instance
+        Activity extends Context
+        might want to put this in a method
+     */
+    CameraManager cManager = (CameraManager) getActivity().getSystemService(Context.CAMERA_SERVICE);
+
+    /*
+        Have to do try & catch for IllegalArgumentException and Camera Access exception
+    */
+
+    try{
+
+
+    }
+    catch (CameraAccessException exception){
+        //Toast.makeText(this, "Need access to camera", Toast.LENGTH_SHORT).show();
+
+        exception.printStackTrace();
+
+    }
+    catch (IllegalArgumentException exception){
+        exception.printStackTrace();
+    }
+
+
+
+
+
+
+     /*
         Converts screen rotation to JPEG orientation
      */
 
@@ -119,6 +168,23 @@ public class CameraFragment extends Fragment implements View.OnClickListener,
                 public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
                 }
             };
+
+            /**
+             *  ID of the current {@link CameraDevice}
+             */
+            private String mCameraID;
+
+            /**
+            *   An {@link AutoFitTextureView} for camera preview.
+            */
+
+
+
+
+
+    public static CameraFragment newInstance() {
+        return new CameraFragment();
+    }
 
     private void requestCameraPermission() {
         if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
