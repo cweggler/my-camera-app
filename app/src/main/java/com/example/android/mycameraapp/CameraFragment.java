@@ -26,6 +26,7 @@ import android.graphics.SurfaceTexture;
 .camera2.CameraCaptureSession;
 
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
@@ -146,7 +148,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener,
      * listen for when the SurfaceTexture is available needed for TextureView
      * and helps render the view for our Camera
      */
-    private final TextureView.SurfaceTextureListener mSurfaceTextureListener =
+    private final TextureView.SurfaceTextureListener surfaceTextureListener =
             new TextureView.SurfaceTextureListener() {
                 @Override
                 public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
@@ -172,11 +174,50 @@ public class CameraFragment extends Fragment implements View.OnClickListener,
             /**
              *  ID of the current {@link CameraDevice}
              */
-            private String mCameraID;
+            private String cameraID;
 
             /**
             *   An {@link AutoFitTextureView} for camera preview.
+             *       This is a separate class
             */
+             private AutoFitTextureView textureView;
+
+            /**
+            *   A {@link CameraCaptureSession } for camera preview.
+            */
+            private CameraCaptureSession session;
+
+            /**
+            * A reference to the opened {@link CameraDevice}
+            */
+            private CameraDevice device;
+
+            /**
+            * The {@link android.util.Size} of camera preview.
+            */
+            private Size previewSize;
+
+            /**
+            * {@link CameraDevice.StateCallback} is called when CameraDevice changes state
+            */
+            private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+                @Override
+                public void onOpened(@NonNull CameraDevice cameraDevice) {
+
+                    device = cameraDevice;
+                    createCameraPreviewSession();
+                }
+
+                @Override
+                public void onDisconnected(@NonNull CameraDevice cameraDevice) {
+
+                }
+
+                @Override
+                public void onError(@NonNull CameraDevice cameraDevice, int i) {
+
+                }
+            }
 
 
 
@@ -208,6 +249,13 @@ public class CameraFragment extends Fragment implements View.OnClickListener,
             return;
         }
 
+    }
+
+    /**
+     * Creates a new {@link CameraCaptureSession} for camera preview
+     */
+    private void createCameraPreviewSession(){
+        SurfaceTexture texture = textureView.getSurfaceTexture();
     }
 
     /**
